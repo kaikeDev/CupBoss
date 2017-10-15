@@ -1,15 +1,20 @@
-var express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
+var express = require('express'),
+app = express(),
+port = process.env.PORT || 3000,
+mongoose = require('mongoose'),
+Boss = require('./api/models/cupModel'),
+bodyParser = require('body-parser');
 
-// Connect to Mongoose
-mongoose.connect('mongodb://localhost/cupbos');
-var db = mongoose.connection;
+//Mongoose
+mongoose.Promise = global.Promise;
+mongoose.connect('mongodb://localhost/bossdb');
 
-app.get('/', function(req, res){
-    res.send('Olá Mundo!');
-});
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
-app.listen(3000);
-console.log('Running on port 3000...')
+var routes = require('./api/routes/cupRoute');
+routes(app);
+
+app.listen(port);
+
+console.log('todo list RESTful API server started on: ' + port);
